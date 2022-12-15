@@ -1,0 +1,76 @@
+
+'utilizando o outlook
+Sub email() ' exemplo de como receber uma variável por parâmetro - (ByVal msg As String)
+    'podem ser utilizados variaveis vindo de outros módulos, ou de celulas da planilha.
+    
+    'Declaração de duas variaveis com tipo objeto
+    Dim emApp As Object, emMail As Object
+    
+    'setando para criar um obejto do outlook
+    Set emApp = CreateObject("Outlook.Application")
+    Set emMail = emApp.CreateItem(0)
+    
+    'destinatário do email
+    emMail.To = "fulano@outlook.com"
+    
+    'adiona destinatário em copia
+    emMail.cc = "beutrano@outlook.com"
+    
+    'Assunto do email
+    emMail.Subject = "Assunto do email"
+    
+    'todo o corpo do email
+    emMail.body = "ola!!"
+    
+    'anexo do email, colocar na variavel o "caminho" do arquivo para anexar
+    emMail.Attachments.Add caminhoDoArquivo
+    
+    'mostrar na tela do outlook o email. Para enviar sem visualizar, retire o .Display do código
+    emMail.Display
+    
+    'enviar email
+    emMail.Send
+    
+    'limpando os objetos
+    Set emApp = Nothing
+    Set emMail = Nothing
+End Sub
+
+
+'utilizando o thunderbird
+Sub emailMozila()
+    Dim thund As String
+    Dim email As String
+    Dim cc As String
+    Dim bcc As String
+    Dim subj As String
+    Dim body As String
+    
+    email = "fulano@teste.com.br"
+    cc = "beutrano@teste.com.br"
+    subj = "Envio de email thunderbird"
+    body = "Bom dia, testando email"
+    
+    'variavel recebe a pasta onde o tunderbird esta instalado, precisa conter o thunderbird.exe na pasta
+    'atenção pois pode estar em Program Files x64
+    thund = "C:\Program Files\Mozilla Thunderbird\thunderbird.exe " & _
+      "-compose " & """" & _
+      "to='" & email & "'," & _
+      "cc='" & cc & "'," & _
+      "subject='" & subj & "'," & _
+      "body='" & body & "'" & """"
+
+    'Variavel e-mail em "to=" e o endereço de email
+    'cc em "cc=" endereços em cópia
+    'subj em "subject=" vai o titulo do email
+    'body em "body=" vai o corpo do email.
+    
+'chama o comando shell, para encontrar o .exe no caminho indicado na variavel thund
+Call Shell(thund, vbNormalFocus)
+'bom utilizar um delay na montagem e envio, pois o computador precisa abrir e montar o email antes do envio, diferente do outlook
+Application.Wait (VBA.Now + VBA.TimeValue("0:00:03"))
+'apos a montagem ele executa aciona o envio do email. Lembrando que o caracter "^~" pode variar de sistema operacional
+Application.SendKeys "^~", True
+
+
+End Sub
